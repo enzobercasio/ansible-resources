@@ -12,10 +12,10 @@ ___
 - No external setup - runs completely on your workstation 
      - Requires podman/docker (and WSL if on Windows) 
          - On podman, works best with machine without root privileges 
-     - Requires access to registry.redhat.io 
+     - Requires access to *registry.redhat.io*
      - Requires access to your Automation Hub if using custom EE 
 - Complete **ansible-dev-tools** included 
-     - Includes *ansible-core*,ansible-builder, ansible-creator, ansible-lint, ansible-navigator, ansible-sign, ansible-molecule, pytest-ansible, tox-ansible, ansible-dev-environment*
+     - Includes *ansible-core,ansible-builder, ansible-creator, ansible-lint, ansible-navigator, ansible-sign, ansible-molecule, pytest-ansible, tox-ansible, ansible-dev-environment*
 - Can fully use the Ansible Extensions including EEs and Ansible Lightspeed
 
 ___
@@ -38,13 +38,13 @@ ___
 
    Alternatively, click the extensions icon in the activity bar and click the gear icon for the Dev Containers extension.
 
-   - Set Dev > Containers: Docker Path to **podman**
-   - Set Dev > Containers: Docker Compose Path to **podman-compose**
+   - Set **Dev > Containers: Docker Path** to **podman**
+   - Set **Dev > Containers: Docker Compose Path** to **podman-compose**
 
 ### Set Up Podman Desktop
 
 1. Create Podman machine
-2. Add Registry registry.redhat.io 
+2. Add Registry *registry.redhat.io*
 
 ___
 ## Installing Ansible Development Tools (ADT) on a container inside VS Code 
