@@ -54,20 +54,29 @@ ___
 3. In the **Ansible Development Tool**, select **Devcontainer**
 4. In the **Create a devcontainer** page, select the **Downstream** container image from the options. 
     - a **_devcontainer.json_** file will be created in your project directory. This contains the settings for your dev container. 
+
 ![Ansible Development Tool](/img/ansible-dev-server-vs-code/img-02.png)
 
 5. Click Open Devcontainer
     - A notification to **Reopen in container** will appear once VS Code detects the **_devcontainer.json_** file. 
     - Click **Reopen in Container**
+
 ![](/img/ansible-dev-server-vs-code/img-03.png)
 
 6. Select the dev container for Podman or Docker depending on which platform you are using. 
+
 ![](/img/ansible-dev-server-vs-code/img-04.png)
+
 7. Once the directory reopens in a container, the Remote () status displays *Dev Container: ansible-dev-container*. 
+
 ![](/img/ansible-dev-server-vs-code/img-06.png)
+
 8. You can now start developing Ansible content inside the dev container. 
+
 ![](/img/ansible-dev-server-vs-code/img-05.png)
+
 9. Verify that the Ansible Development Tools and some Collections are already installed. 
+
 ![](/img/ansible-dev-server-vs-code/img-08.png)
 ___
 Reference: [Installing Ansible development tools on a container inside VS Code](https://docs.redhat.com/fr/documentation/red_hat_ansible_automation_platform/2.4/html-single/developing_ansible_automation_content/index#devtools-install-container_installing-devtools)
