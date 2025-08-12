@@ -13,7 +13,7 @@ key_name: "ansible-dev-key"
 ssh_public_key_file: ""   # set empty "" if you already have the key in AWS
 
 # Instance settings
-instance_name: "ansible-dev-server"
+instance_name: "ansible-dev-server2"
 instance_type: "t3.micro"
 volume_size_gb: 16
 volume_type: "gp3"
@@ -21,6 +21,9 @@ iam_instance_profile: ""       # optional, e.g., "EC2SSMRole"
 
 # AMI (Optional: leave blank to auto-discover latest Ubuntu 22.04 LTS)
 ami_id: ""
+
+# Public-IP behavior: auto | always | never
+assign_public_ip_mode: auto
 
 # Tags
 common_tags:

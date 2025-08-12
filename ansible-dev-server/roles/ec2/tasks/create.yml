@@ -1,20 +1,107 @@
 ---
-# Sanity: prove what Ansible sees (keeps us honest but doesn't change anything)
+# Sanity: prove the inputs we will use
 - name: Preflight | show region + subnet + sg
   debug:
     msg:
       aws_region: "{{ aws_region }}"
       subnet_id: "{{ subnet_id }}"
       resolved_sg_id: "{{ resolved_sg_id | default('') }}"
+      assign_public_ip_mode: "{{ assign_public_ip_mode | default('auto') }}"
 
-# Hard fail if subnet_id isn't actually set at runtime
 - name: Preflight | ensure subnet_id provided
   assert:
     that:
       - (subnet_id | default('')) | length > 0
     fail_msg: "subnet_id is empty. Set it in group_vars/all.yml (or pass -e subnet_id=...)."
 
-# Launch strictly using the provided subnet_id
+# Look up ONLY the provided subnet to see if it's public
+# Look up ONLY the provided subnet
+- name: Lookup the provided subnet
+  amazon.aws.ec2_vpc_subnet_info:
+    region: "{{ aws_region }}"
+    filters:
+      subnet-id: "{{ subnet_id }}"
+  register: subnet_info
+
+- name: Ensure the subnet exists
+  assert:
+    that:
+      - (subnet_info.subnets | default([])) | length == 1
+    fail_msg: "Subnet {{ subnet_id }} not found in region {{ aws_region }}."
+
+# Get any route table explicitly associated with the subnet
+- name: Get route table associated with the subnet (if any)
+  amazon.aws.ec2_vpc_route_table_info:
+    region: "{{ aws_region }}"
+    filters:
+      association.subnet-id: "{{ subnet_id }}"
+  register: rt_assoc
+
+# If none explicitly associated, also fetch VPC route tables to find the main one
+- name: Get all VPC route tables (for main RT fallback)
+  when: (rt_assoc.route_tables | default([])) | length == 0
+  amazon.aws.ec2_vpc_route_table_info:
+    region: "{{ aws_region }}"
+    filters:
+      vpc-id: "{{ vpc_id }}"
+  register: rt_vpc
+
+# Choose the candidate RTs: subnet-associated if present, else VPC main RT
+- name: Choose candidate route tables
+  set_fact:
+    _candidate_rts: "{{ rt_assoc.route_tables | default([]) }}"
+
+- name: Fallback to VPC main route table
+  when: (_candidate_rts | length) == 0
+  set_fact:
+    _candidate_rts: >-
+      {{
+        (rt_vpc.route_tables | default([]))
+        | selectattr('associations','defined')
+        | selectattr('associations','selectattr','main','equalto', true)
+        | list
+      }}
+
+# Determine if any candidate RT has a route to an Internet Gateway (igw-*)
+- name: Determine if RT has a route to an Internet Gateway
+  set_fact:
+    _rt_has_igw: >-
+      {{
+        _candidate_rts
+        | map(attribute='routes') | list | sum(start=[])
+        | selectattr('gateway_id','defined')
+        | selectattr('gateway_id','search','^igw-')
+        | list | length > 0
+      }}
+
+# Subnet is public if either auto-assign is on OR its RT leads to an IGW
+- name: Determine if subnet is public
+  set_fact:
+    _is_public_subnet: >-
+      {{ (subnet_info.subnets[0].map_public_ip_on_launch | default(false)) or _rt_has_igw }}
+
+# Compute final decision based on mode + subnet type
+- name: Decide public IP assignment
+  set_fact:
+    _associate_public_ip: >-
+      {{
+        (assign_public_ip_mode | default('auto')) == 'always' and true
+        or (assign_public_ip_mode | default('auto')) == 'never' and false
+        or _is_public_subnet
+      }}
+
+- name: Note public IP decision
+  debug:
+    msg:
+      via_route_to_igw: "{{ _rt_has_igw }}"
+      map_public_ip_on_launch: "{{ subnet_info.subnets[0].map_public_ip_on_launch | default(false) }}"
+      is_public_subnet: "{{ _is_public_subnet }}"
+      associate_public_ip: "{{ _associate_public_ip }}"
+
+
+
+# Launch strictly in the provided subnet, with conditional public IP
+# Using network_interfaces for broad compatibility across amazon.aws versions
 - name: Launch or ensure instance present
   amazon.aws.ec2_instance:
     region: "{{ aws_region }}"
@@ -22,16 +109,18 @@
     image_id: "{{ resolved_ami_id }}"
     instance_type: "{{ instance_type }}"
     key_name: "{{ key_name }}"
-    vpc_subnet_id: "{{ subnet_id }}"     # use the one from vars (as you want)
 
-    # ⬇️ Replace this...
-    # security_group_ids:
-    #   - "{{ resolved_sg_id }}"
-    # ⬆️ ...with this:
+    # Use ONLY the provided subnet (cover all legacy shapes)
+    vpc_subnet_id: "{{ subnet_id }}"
+    subnet_id: "{{ subnet_id }}"
+
+    # Assign/skip public IP via top-level 'network'
+    network:
+      assign_public_ip: "{{ _associate_public_ip | bool }}"
+
+    # Security group (IDs usually work; if yours wants names, swap to security_group: "{{ security_group_name }}" )
     security_groups:
-      - "{{ resolved_sg_id }}"           # works with IDs on recent versions
-      # If your version insists on NAMES, swap to:
-      # - "{{ security_group_name }}"
+      - "{{ resolved_sg_id }}"
 
     volumes:
       - device_name: /dev/sda1
@@ -45,4 +134,3 @@
     wait: true
     state: running
   register: ec2_instance
-
