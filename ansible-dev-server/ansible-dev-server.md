@@ -25,3 +25,5 @@ aws configure
 ```
 
 
+
+ansible-galaxy collection install -r collections/requirements.yml

@@ -1,3 +1,0 @@
-# Vars local to the bootstrap role (tweak as needed)
-collections_path: "/home/{{ ansible_ssh_user }}/.ansible/collections"
-workspace_dir: "/home/{{ ansible_ssh_user }}/ansible"
