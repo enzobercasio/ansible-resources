@@ -1,0 +1,35 @@
+# ===== AWS / EC2 =====
+aws_region: ap-southeast-1
+vpc_subnet_id: subnet-0e1f738fc893f4b4c         # <-- set this
+key_name: ansible-dev-key                     # <-- must exist in region
+instance_type: t3.small
+assign_public_ip: true
+sg_name: ansible-dev-sg
+name_tag: ansible-dev
+
+# Canonical Ubuntu 24.04
+ubuntu_owner: "099720109477"
+ubuntu_name_filter: "ubuntu/images/hvm-ssd/ubuntu-noble-24.04-amd64-server-*"
+
+# Optional: restrict ports
+allowed_cidrs_ssh:
+  - "0.0.0.0/0"          # tighten this
+allowed_cidrs_code_server:
+  - "0.0.0.0/0"          # or your IP/CIDR
+
+# ===== Dev user on instance (Ubuntu images use 'ubuntu') =====
+ansible_ssh_user: ubuntu
+ansible_ssh_private_key_file: "~/.ssh/ansible-dev-key.pem"
+
+# ===== Tooling toggles =====
+install_code_server: true
+code_server_port: 8080
+
+# Core collections to install on the server
+core_collections:
+  - ansible.utils
+  - ansible.posix
+  - community.general
+  - community.crypto
+  - amazon.aws
+  - community.aws

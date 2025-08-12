@@ -1,0 +1,46 @@
+---
+- name: Wait for SSH
+  ansible.builtin.wait_for_connection:
+    timeout: 600
+
+- name: Create workspace
+  become: true
+  ansible.builtin.file:
+    path: "{{ workspace_dir }}"
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "0755"
+
+- name: Write requirements.yml for on-host collections
+  become: true
+  ansible.builtin.copy:
+    dest: "{{ workspace_dir }}/requirements.yml"
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "0644"
+    content: |
+      ---
+      collections:
+      {% for c in core_collections %}
+        - name: {{ c }}
+      {% endfor %}
+
+- name: Install core collections to user space
+  become: true
+  become_user: "{{ ansible_ssh_user }}"
+  ansible.builtin.shell: |
+    export PATH="$HOME/.local/bin:$PATH"
+    ansible-galaxy collection install -r {{ workspace_dir }}/requirements.yml -p {{ collections_path }}
+  args:
+    executable: /bin/bash
+
+- name: (Optional) Print code-server URL
+  ansible.builtin.debug:
+    msg: >-
+      {% if install_code_server|bool -%}
+      Access code-server at http://{{ hostvars[inventory_hostname].ansible_host }}:{{ code_server_port }}
+      (Restrict {{ code_server_port }} in the SG and front with HTTPS if public.)
+      {%- else -%}
+      code-server not installed (set install_code_server: true in group_vars/all.yml).
+      {%- endif %}

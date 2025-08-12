@@ -1,0 +1,2 @@
+# Vars local to the EC2 role (rarely changed)
+security_group_desc: "Ansible Dev Server security group"
