@@ -1,0 +1,48 @@
+---
+# Sanity: prove what Ansible sees (keeps us honest but doesn't change anything)
+- name: Preflight | show region + subnet + sg
+  debug:
+    msg:
+      aws_region: "{{ aws_region }}"
+      subnet_id: "{{ subnet_id }}"
+      resolved_sg_id: "{{ resolved_sg_id | default('') }}"
+
+# Hard fail if subnet_id isn't actually set at runtime
+- name: Preflight | ensure subnet_id provided
+  assert:
+    that:
+      - (subnet_id | default('')) | length > 0
+    fail_msg: "subnet_id is empty. Set it in group_vars/all.yml (or pass -e subnet_id=...)."
+
+# Launch strictly using the provided subnet_id
+- name: Launch or ensure instance present
+  amazon.aws.ec2_instance:
+    region: "{{ aws_region }}"
+    name: "{{ instance_name }}"
+    image_id: "{{ resolved_ami_id }}"
+    instance_type: "{{ instance_type }}"
+    key_name: "{{ key_name }}"
+    vpc_subnet_id: "{{ subnet_id }}"     # use the one from vars (as you want)
+
+    # ⬇️ Replace this...
+    # security_group_ids:
+    #   - "{{ resolved_sg_id }}"
+    # ⬆️ ...with this:
+    security_groups:
+      - "{{ resolved_sg_id }}"           # works with IDs on recent versions
+      # If your version insists on NAMES, swap to:
+      # - "{{ security_group_name }}"
+
+    volumes:
+      - device_name: /dev/sda1
+        ebs:
+          volume_size: "{{ volume_size_gb }}"
+          volume_type: "{{ volume_type }}"
+          delete_on_termination: true
+    instance_initiated_shutdown_behavior: terminate
+    iam_instance_profile: "{{ (iam_instance_profile | default('') | length > 0) | ternary(iam_instance_profile, omit) }}"
+    tags: "{{ common_tags | combine({'Name': instance_name}) }}"
+    wait: true
+    state: running
+  register: ec2_instance
+

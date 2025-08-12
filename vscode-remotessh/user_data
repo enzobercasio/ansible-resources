@@ -1,0 +1,20 @@
+#cloud-config
+package_update: true
+packages:
+  - git
+  - python3
+  - python3-venv
+  - python3-pip
+  - pipx
+  - tmux
+  - jq
+  - unzip
+  - build-essential
+runcmd:
+  - adduser --disabled-password --gecos "" dev
+  - usermod -aG sudo dev
+  - mkdir -p /home/dev/.ssh && chmod 700 /home/dev/.ssh
+  - echo "ssh-ed25519 YOUR_PUBLIC_KEY dev@laptop" >> /home/dev/.ssh/authorized_keys
+  - chown -R dev:dev /home/dev/.ssh
+  - sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config
+  - systemctl restart ssh

@@ -79,5 +79,5 @@ ___
 
 ![](/img/ansible-dev-server-vs-code/img-08.png)
 ___
-Reference: [Installing Ansible development tools on a container inside VS Code](https://docs.redhat.com/fr/documentation/red_hat_ansible_automation_platform/2.4/html-single/developing_ansible_automation_content/index#devtools-install-container_installing-devtools)
+**Reference:** [Installing Ansible development tools on a container inside VS Code](https://docs.redhat.com/fr/documentation/red_hat_ansible_automation_platform/2.4/html-single/developing_ansible_automation_content/index#devtools-install-container_installing-devtools)
 

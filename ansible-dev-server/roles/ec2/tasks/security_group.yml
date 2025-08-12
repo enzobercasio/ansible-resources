@@ -1,0 +1,56 @@
+---
+# 1) Create SG only if the user didn't pass an ID
+- name: Create security group when no sg_id provided
+  when: (security_group_id | default('')) | length == 0
+  amazon.aws.ec2_security_group:
+    name: "{{ security_group_name }}"
+    description: "SSH access for Ansible EC2 demo"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: "{{ security_group_ingress_cidr }}"
+    rules_egress:
+      - proto: -1
+        from_port: 0
+        to_port: 0
+        cidr_ip: "0.0.0.0/0"
+    state: present
+
+# 2) If we created (or expect) it by name, look up its ID
+- name: Lookup security group by name in VPC
+  when: (security_group_id | default('')) | length == 0
+  amazon.aws.ec2_security_group_info:
+    region: "{{ aws_region }}"
+    filters:
+      group-name: "{{ security_group_name }}"
+      vpc-id: "{{ vpc_id }}"
+  register: sg_info
+
+# 3) Fail early with a clear message if not found
+- name: Ensure security group was found
+  when: (security_group_id | default('')) | length == 0
+  ansible.builtin.assert:
+    that:
+      - (sg_info.security_groups | default([])) | length > 0
+    fail_msg: >-
+      Could not find security group '{{ security_group_name }}' in VPC '{{ vpc_id }}'.
+      Check VPC/region and your permissions.
+
+# 4) Set the resolved SG ID in two safe, separate tasks (avoid eager evaluation)
+- name: Use provided SG ID
+  when: (security_group_id | default('')) | length > 0
+  ansible.builtin.set_fact:
+    resolved_sg_id: "{{ security_group_id }}"
+
+- name: Use looked-up SG ID
+  when: (security_group_id | default('')) | length == 0
+  ansible.builtin.set_fact:
+    resolved_sg_id: >-
+      {{ (sg_info.security_groups
+          | default([])
+          | map(attribute='group_id')
+          | list
+          | first) }}

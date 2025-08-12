@@ -1,0 +1,7 @@
+
+
+# Public SSH:
+source ./env.sh
+bash public_create_net.sh
+bash public_launch_ubuntu.sh
+

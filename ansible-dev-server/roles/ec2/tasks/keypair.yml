@@ -1,0 +1,8 @@
+---
+- name: Create key pair from public key (only if ssh_public_key_file is set)
+  when: (ssh_public_key_file | default('')) | length > 0
+  amazon.aws.ec2_key:
+    name: "{{ key_name }}"
+    region: "{{ aws_region }}"
+    state: present
+    key_material: "{{ lookup('file', ssh_public_key_file) }}"

@@ -1,0 +1,25 @@
+---
+- name: Resolve AMI (skip if ami_id provided)
+  when: (ami_id | default('')) | length == 0
+  amazon.aws.ec2_ami_info:
+    region: "{{ aws_region }}"
+    owners: ["{{ ubuntu_owner }}"]
+    filters:
+      name: "{{ ubuntu_name_filter }}"
+      architecture: x86_64
+      root-device-type: ebs
+      virtualization-type: hvm
+  register: ami_info
+
+- name: Pick latest AMI by creation date
+  when: (ami_id | default('')) | length == 0
+  set_fact:
+    resolved_ami_id: >-
+      {{ (ami_info.images | sort(attribute='creation_date')) | last | default({}) | dict2items | selectattr('key','equalto','image_id') | map(attribute='value') | first }}
+  vars:
+    # Fallback if no images found
+    default_ami: ""
+- name: Use provided AMI if set
+  when: (ami_id | default('')) | length > 0
+  set_fact:
+    resolved_ami_id: "{{ ami_id }}"
