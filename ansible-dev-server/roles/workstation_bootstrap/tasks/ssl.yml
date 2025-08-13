@@ -1,0 +1,21 @@
+---
+- name: Generate self-signed cert (if requested)
+  when: code_server_generate_self_signed | bool
+  shell: |
+    openssl req -x509 -nodes -days 825 \
+      -newkey rsa:2048 \
+      -keyout "{{ code_server_key_path }}" \
+      -out "{{ code_server_cert_path }}" \
+      -subj "/CN={{ code_server_cert_cn }}"
+  args:
+    creates: "{{ code_server_cert_path }}"
+
+- name: Set perms on certs
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0640'
+  loop:
+    - "{{ code_server_cert_path }}"
+    - "{{ code_server_key_path }}"

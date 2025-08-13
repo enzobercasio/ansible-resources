@@ -1,0 +1,15 @@
+---
+execution-environment:
+  enabled: true
+  container-engine: podman
+  image: "{{ ee_image }}"
+  pull:
+    policy: missing
+  environment-variables:
+    pass:
+      - ANSIBLE_STDOUT_CALLBACK
+      - AWS_PROFILE
+      - AWS_REGION
+ansible:
+  playbook-artifact:
+    enable: true

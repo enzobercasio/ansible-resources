@@ -1,0 +1,12 @@
+[Unit]
+Description=code-server for %i
+After=network.target
+
+[Service]
+User=%i
+Environment=PASSWORD={{ code_server_password }}
+ExecStart=/usr/bin/code-server --bind-addr 0.0.0.0:{{ code_server_port }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

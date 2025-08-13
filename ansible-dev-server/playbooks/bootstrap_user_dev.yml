@@ -1,0 +1,41 @@
+---
+# >>>>> EDIT THESE VARS <<<<<
+- name: Bootstrap an existing user as Ansible Dev/Code Server
+  hosts: devhost
+  become: true
+
+  vars:
+    ansible_user: ubuntu
+    ansible_ssh_private_key_file: ~/.ssh/ansible-dev-key.pem
+    target_user: "ubuntu"                # existing VM user to configure
+    code_server_port: 8081               # unique per user
+    code_server_password: "changeMe!"    # browser password
+    code_server_enable_ssl: false        # true to enable SSL
+    code_server_cert_path: "/etc/code-server/{{ target_user }}.crt"  # used if SSL=true
+    code_server_key_path:  "/etc/code-server/{{ target_user }}.key"  # used if SSL=true
+    # If you want self-signed certs generated automatically:
+    code_server_generate_self_signed: true
+    code_server_cert_cn: "dev.local"     # CN for self-signed cert if generating
+
+    # EE (Execution Environment) – registry + image (podman)
+    ee_registry: "quay.io"
+    ee_username: ""       # set if private; else leave blank
+    ee_password: ""       # set if private; else leave blank (or use Ansible Vault)
+    ee_image: "quay.io/ansible/creator-ee:latest"
+
+    # Seed content options
+    create_example_inventory: false
+    clone_example_repo: true
+    example_repo_url: "https://github.com/enzobercasio/ansible-example-dir"
+    projects_root: "/home/{{ target_user }}/dev"
+    ansible_workspace: "{{ projects_root }}/ansible"
+
+    # Optional: extra VS Code extensions
+    vscode_extensions:
+      - redhat.ansible
+      - ms-python.python
+    #  - ms-azuretools.vscode-docker
+      - ms-vscode-remote.remote-containers # dev container
+
+  roles:
+    - workstation_bootstrap

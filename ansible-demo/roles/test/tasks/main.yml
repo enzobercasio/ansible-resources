@@ -1,0 +1,16 @@
+---
+- name: Say Hello World
+  debug:
+    msg: "Hello World!"
+
+- name: Show hostname
+  debug:
+    msg: "Hostname: {{ ansible_hostname }}"
+
+- name: Show primary IPv4 address
+  debug:
+    msg: >-
+      IP Address: {{
+        (ansible_default_ipv4.address
+         | default(ansible_all_ipv4_addresses | first | default('N/A')))
+      }}

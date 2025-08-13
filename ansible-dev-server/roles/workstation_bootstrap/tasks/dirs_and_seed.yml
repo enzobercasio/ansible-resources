@@ -1,0 +1,30 @@
+---
+- name: Create workspace directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: '0755'
+  loop:
+    - "{{ projects_root }}"
+    - "{{ ansible_workspace }}"
+    - "{{ ansible_workspace }}/inventories/dev/group_vars"
+    - "{{ ansible_workspace }}/roles"
+
+- name: Seed example inventory (optional)
+  when: create_example_inventory | bool
+  copy:
+    src: "example-inventory/"
+    dest: "{{ ansible_workspace }}/inventories/dev/"
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: '0644'
+
+- name: Clone example repo (optional)
+  when: clone_example_repo | bool
+  become_user: "{{ target_user }}"
+  git:
+    repo: "{{ example_repo_url }}"
+    dest: "{{ ansible_workspace }}/Ansible-Example"
+    version: HEAD

@@ -1,0 +1,8 @@
+bind-addr: 0.0.0.0:{{ code_server_port }}
+auth: password
+password: {{ code_server_password }}
+cert: {{ (code_server_enable_ssl | bool) | ternary(code_server_cert_path, 'false') }}
+{% if code_server_enable_ssl %}
+cert-key: {{ code_server_key_path }}
+{% endif %}
+disable-telemetry: true

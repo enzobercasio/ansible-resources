@@ -1,0 +1,33 @@
+---
+- name: Ensure apt cache is fresh
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install base packages
+  apt:
+    name:
+      - curl
+      - wget
+      - unzip
+      - git
+      - python3
+      - python3-pip
+      - python3-venv
+      - build-essential
+      - ca-certificates
+      - gnupg
+      - jq
+    state: present
+
+- name: Include Podman + subuid/subgid setup
+  include_tasks: podman.yml
+
+- name: Include code-server setup (with optional SSL)
+  include_tasks: code_server.yml
+
+- name: Include ansible-navigator setup and EE wiring
+  include_tasks: ansible_nav.yml
+
+- name: Create dirs and seed inventory/repo
+  include_tasks: dirs_and_seed.yml

@@ -1,0 +1,62 @@
+---
+- name: Download code-server installer
+  get_url:
+    url: https://code-server.dev/install.sh
+    dest: /tmp/code-server-install.sh
+    mode: '0755'
+
+- name: Install code-server
+  shell: /tmp/code-server-install.sh
+  args:
+    creates: /usr/bin/code-server
+
+- name: Ensure code-server config dir exists
+  file:
+    path: "/home/{{ target_user }}/.config/code-server"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: '0755'
+
+- name: SSL | create dir
+  when: code_server_enable_ssl | bool
+  file:
+    path: /etc/code-server
+    state: directory
+    mode: '0750'
+
+- name: Include SSL (self-signed or existing paths)
+  when: code_server_enable_ssl | bool
+  include_tasks: ssl.yml
+
+- name: Render code-server config
+  template:
+    src: code-server-config.yaml.j2
+    dest: "/home/{{ target_user }}/.config/code-server/config.yaml"
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: '0644'
+
+- name: Install systemd unit
+  template:
+    src: code-server.service.j2
+    dest: "/etc/systemd/system/code-server@{{ target_user }}.service"
+    mode: '0644'
+
+- name: Enable & start code-server
+  systemd:
+    name: "code-server@{{ target_user }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+
+# Optional: install VS Code extensions
+- name: Install vscode extensions
+  become_user: "{{ target_user }}"
+  shell: |
+    set -e
+    {% for ext in vscode_extensions %}
+    code-server --install-extension {{ ext }} || true
+    {% endfor %}
+  args:
+    executable: /bin/bash

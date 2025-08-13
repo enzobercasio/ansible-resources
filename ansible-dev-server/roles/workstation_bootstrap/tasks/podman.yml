@@ -1,0 +1,50 @@
+---
+- name: Install Podman and ansible-navigator
+  apt:
+    name:
+      - podman
+#      - podman-plugins
+    state: present
+
+- name: Install ansible + ansible-navigator via pip
+  pip:
+    name:
+      - ansible
+      - ansible-navigator
+    executable: pip3
+
+# Rootless podman mappings
+- name: Ensure subuid/subgid entries exist
+  lineinfile:
+    path: "{{ item.path }}"
+    line: "{{ target_user }}:100000:65536"
+    create: yes
+  loop:
+    - { path: "/etc/subuid" }
+    - { path: "/etc/subgid" }
+
+- name: Create podman config dir for user
+  file:
+    path: "/home/{{ target_user }}/.config/containers"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: '0755'
+
+- name: Login to registry (if creds provided)
+  become_user: "{{ target_user }}"
+  shell: |
+    set -e
+    if [ -n "{{ ee_username | default('') }}" ] && [ -n "{{ ee_password | default('') }}" ]; then
+      echo "{{ ee_password }}" | podman login {{ ee_registry }} --username "{{ ee_username }}" --password-stdin
+    fi
+  args:
+    executable: /bin/bash
+
+- name: Pull EE image
+  become_user: "{{ target_user }}"
+  shell: |
+    set -e
+    podman pull {{ ee_image }}
+  args:
+    executable: /bin/bash

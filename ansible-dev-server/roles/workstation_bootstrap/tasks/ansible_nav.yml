@@ -1,0 +1,16 @@
+---
+- name: Create ansible-navigator config dir
+  file:
+    path: "/home/{{ target_user }}/.config/ansible-navigator"
+    state: directory
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: '0755'
+
+- name: Render ansible-navigator config
+  template:
+    src: ansible-navigator.yml.j2
+    dest: "/home/{{ target_user }}/.config/ansible-navigator/ansible-navigator.yml"
+    owner: "{{ target_user }}"
+    group: "{{ target_user }}"
+    mode: '0644'
