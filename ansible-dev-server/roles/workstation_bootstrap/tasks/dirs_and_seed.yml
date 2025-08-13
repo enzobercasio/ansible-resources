@@ -26,5 +26,5 @@
   become_user: "{{ target_user }}"
   git:
     repo: "{{ example_repo_url }}"
-    dest: "{{ ansible_workspace }}/Ansible-Example"
+    dest: "{{ ansible_workspace }}/ansible-demo"
     version: HEAD

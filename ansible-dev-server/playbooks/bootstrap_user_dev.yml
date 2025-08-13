@@ -24,9 +24,9 @@
     ee_image: "quay.io/ansible/creator-ee:latest"
 
     # Seed content options
-    create_example_inventory: false
+    create_example_inventory: true
     clone_example_repo: true
-    example_repo_url: "https://github.com/enzobercasio/ansible-example-dir"
+    example_repo_url: "https://github.com/enzobercasio/ansible-demo"
     projects_root: "/home/{{ target_user }}/dev"
     ansible_workspace: "{{ projects_root }}/ansible"
 
