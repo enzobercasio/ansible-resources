@@ -85,11 +85,12 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
     OpenShift Dev Spaces provides a cloud-based, containerized development environment integrated directly with OpenShift. 
 
     **Benefits:** 
-    - Preconfigured, on-demand development workspaces with Ansible tools
-    - Integration with GitOps and CI/CD Workflows 
+    - Preconfigured, on-demand development workspaces with Ansible Development tools
+    - Consistent environment, each workspace is centrally configured removing development workspace configuration drift.
 
     **Best for:** Teams already working in an OpenShift ecosystem who want a fully managed, enterprise-ready dev platform.
 
+    see [Boost Ansible developer experience with OpenShift Dev Spaces](https://developers.redhat.com/articles/2023/10/02/boost-ansible-developer-experience-openshift-dev-spaces#)
 ---
 ## Recommendations
 - If using Option 2, use the [VS Code with Ansible and Dev Containers Extensions](https://github.com/enzobercasio/ansible-resources/blob/master/ansible-dev-server-vs-code-dev-containers.md) approach.
