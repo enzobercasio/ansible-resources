@@ -35,6 +35,9 @@ When developing Ansible playbooks, you might want to:
 3. Connect from VS Code 
   - Press F1, type in **Remote-SSH: Connect to Host...**
   - Select **_ansible-dev_**
+  - Or go to the **Remote Explorer** and click on the remote server from the SSH list
+
+  ![Ansible Development Server with Remote SSH](/img/ansible-dev-ssh/img-03.png)
 
 4. Set Up your Ansible Remote Workspace
   - Once connected, instrall VS Code extensions **in the remote environment**
