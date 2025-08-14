@@ -57,6 +57,7 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
 
     **Benefits:** 
     - Access from any device with a browser
+    - No laptop installation required
     - Same VS Code extensions and settings everywhere
     - Easy to share environments with teammates
 
@@ -73,6 +74,7 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
     - Full control over a powerful remote machine 
     - Leverage remote compute resourcces while keeping local machine lightweight
     - Minimal setup if SSH access is already available 
+    - Utilize all Ansible extension capabilities including Lightspeed
 
     **Best for:** Developer who want low-latency terminal performance but remote compute power. 
 
@@ -83,9 +85,8 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
     OpenShift Dev Spaces provides a cloud-based, containerized development environment integrated directly with OpenShift. 
 
     **Benefits:** 
-    - Preconfigured workspaces with Ansible tools
+    - Preconfigured, on-demand development workspaces with Ansible tools
     - Integration with GitOps and CI/CD Workflows 
-    - Runs directl in the same cluster where automation will be deployed 
 
     **Best for:** Teams already working in an OpenShift ecosystem who want a fully managed, enterprise-ready dev platform.
 
