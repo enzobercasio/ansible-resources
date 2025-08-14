@@ -34,7 +34,8 @@ Local setups are ideal if you want direct control over the environment, low-late
     - Ideal for integrating with CI/CD pipelines.
 
     **Best for:** Teams needing consistent builds and isolated environments without polluting local systems.
-
+    
+    see [Ansible Dev Server using VS Code Dev Containers](https://github.com/enzobercasio/ansible-resources/blob/master/ansible-dev-server-vs-code-dev-containers.md)
 ---
 ## Remote Development Options 
 
@@ -52,6 +53,8 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
 
     **Best for:** Distributed teams that want a familiar IDE in a cloud-accessible form. 
 
+    see [Ansible Dev Server Using Code Server](https://github.com/enzobercasio/ansible-resources/blob/master/ansible-dev-server.md)
+
 ---
 4. **Remote SSH**
 
@@ -64,6 +67,7 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
 
     **Best for:** Developer who want low-latency terminal performance but remote compute power. 
 
+    see [Ansible Dev Server using VS Code Remote SSH](https://github.com/enzobercasio/ansible-resources/blob/master/ansible-dev-server-vs-code-remote-ssh.md)
 ---
 5. **OpenShift Dev Spaces**
 
