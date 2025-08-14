@@ -63,7 +63,7 @@ When developing Ansible playbooks, you might want to:
 
   - Ansible-Navigator
 
-   ```
+    ```
     sudo apt install python3-pip
     pip install ansible-navigator --user
     echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.profile
@@ -75,5 +75,5 @@ When developing Ansible playbooks, you might want to:
     ```
     git clone https://github.com/enzobercasio/ansible-demo.git
     ```
-    
-    ![Ansible Development Server](/img/ansible-dev-server/img-05.png)
+
+    ![Ansible Development Server with Remote SSH](/img/ansible-dev-ssh/img-04.png)
