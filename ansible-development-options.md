@@ -4,7 +4,6 @@
 
 Local setups are ideal if you want direct control over the environment, low-latency editing and offline capabilities. 
 
----
 1. **Python Virtual Environment**
 
     A Python Virtual Environment (venv) allows you to isolate your Ansible dependencies without affecting your system-wide Python installation.
@@ -23,7 +22,8 @@ Local setups are ideal if you want direct control over the environment, low-late
     ```
 
     **Best for:** Developers who prefer simplicity and minimal tooling overhead. 
----
+
+
 2. **Docker/Podman Desktop**
     
     Running Ansible inside a container ensures a fully reproducible and clean environment every time.
@@ -36,12 +36,13 @@ Local setups are ideal if you want direct control over the environment, low-late
     **Best for:** Teams needing consistent builds and isolated environments without polluting local systems.
     
     see [Ansible Dev Server using VS Code Dev Containers](https://github.com/enzobercasio/ansible-resources/blob/master/ansible-dev-server-vs-code-dev-containers.md)
+
 ---
 ## Remote Development Options 
 
 Remote setups are ideal for collaborative work, resource-heavy tasks, and when you need a consistent environment accessible from anywhere. 
 
----
+
 3. **Code Server**
 
     Code Server runs Visual Studio Code in a browser, allowing you to connect to a remote Ansible-ready environment. 
@@ -55,7 +56,7 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
 
     see [Ansible Dev Server Using Code Server](https://github.com/enzobercasio/ansible-resources/blob/master/ansible-dev-server.md)
 
----
+
 4. **Remote SSH**
 
     With VS Code Remote SSH, you connect to a remote server or VM where Ansible is installed. 
@@ -68,7 +69,7 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
     **Best for:** Developer who want low-latency terminal performance but remote compute power. 
 
     see [Ansible Dev Server using VS Code Remote SSH](https://github.com/enzobercasio/ansible-resources/blob/master/ansible-dev-server-vs-code-remote-ssh.md)
----
+
 5. **OpenShift Dev Spaces**
 
     OpenShift Dev Spaces provides a cloud-based, containerized development environment integrated directly with OpenShift. 
@@ -80,7 +81,7 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
 
     **Best for:** Teams already working in an OpenShift ecosystem who want a fully managed, enterprise-ready dev platform.
 
-
+---
 ## Recommendations
 - Use VS Code with Ansible and Dev Containers Extensions for Docker/Podman Desktop [option 2].
 - You can use hybrid approach. For example, prototyping locally in a container [option 2] and then test playbooks in an OpenShift Dev Spaces workspace [option 5] before committing to production. 
