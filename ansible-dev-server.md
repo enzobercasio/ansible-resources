@@ -131,7 +131,7 @@ The setup involves:
 - Restrict access to trusted IPs when possible
 - Keep your Code Server instance updated
 - [Automate Ansible Dev Server with Ansible](https://github.com/enzobercasio/ansible-resources/tree/master/ansible-dev-server)
-
+- Refer to official [VS Code - Code Server documentation](https://code.visualstudio.com/docs/remote/vscode-server) for licensing and other FAQs.
 
 ### Additional settings 
 
