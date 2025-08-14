@@ -85,5 +85,5 @@ Remote setups are ideal for collaborative work, resource-heavy tasks, and when y
 ## Recommendations
 - Use [VS Code with Ansible and Dev Containers Extensions](https://github.com/enzobercasio/ansible-resources/blob/master/ansible-dev-server-vs-code-dev-containers.md) for Docker/Podman Desktop [option 2].
 - You can use hybrid approach. For example, prototyping locally in a container [option 2] and then test playbooks in an OpenShift Dev Spaces workspace [option 5] before committing to production. 
-- [Automate Ansible Dev Server with Ansible](https://github.com/enzobercasio/ansible-resources/tree/master/ansible-dev-server)
+- [Automate Ansible Dev Server provisioning with Ansible](https://github.com/enzobercasio/ansible-resources/tree/master/ansible-dev-server)
 
