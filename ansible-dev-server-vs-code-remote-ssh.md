@@ -75,3 +75,4 @@ When developing Ansible playbooks, you might want to:
     ```
     git clone https://github.com/enzobercasio/ansible-demo.git
     ```
+    ![Ansible Development Server](/img/ansible-dev-server/img-05.png)
