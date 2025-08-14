@@ -11,7 +11,6 @@ ___
 ### What are the benefits?
 - No external setup - runs completely on your workstation 
      - Requires podman/docker (and WSL if on Windows) 
-         - On podman, works best with machine without root privileges 
      - Requires access to *registry.redhat.io*
      - Requires access to your Automation Hub if using custom EE 
 - Complete **ansible-dev-tools** included 
