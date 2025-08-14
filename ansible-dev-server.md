@@ -130,6 +130,7 @@ The setup involves:
 - Use strong authentication 
 - Restrict access to trusted IPs when possible
 - Keep your Code Server instance updated
+- [Automate Ansible Dev Server with Ansible](https://github.com/enzobercasio/ansible-resources/tree/master/ansible-dev-server)
 
 
 ### Additional settings 
