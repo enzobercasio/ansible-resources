@@ -1,5 +1,5 @@
 
-### Resources
+### Best Practices Resources
 
 Refer to the following resources: 
 
